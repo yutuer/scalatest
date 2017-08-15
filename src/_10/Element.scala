@@ -1,18 +1,29 @@
 package _10
 
+import Element.elem
+
 abstract class Element {
   def contents:Array[String]
   def height:Int = contents.length
   def width:Int = if(height == 0) 0 else contents(0).length
 
   def above(that:Element):Element = {
-    Element.elem(this.contents ++ that.contents)
+    elem(this.contents ++ that.contents)
   }
 
   def beside(that:Element):Element = {
-    Element.elem(
+    elem(
         for((line1, line2) <- this.contents zip that.contents) yield (line1 + line2)
     )
+
+    def widen(w:Int):Element = {
+      if(w <= 0) this
+      else{
+        val left = elem(' ', (w - width) / 2, height)
+        val right = elem(' ', w - width - left.width, height)
+        left beside this beside right
+      }
+    }
   }
 
   override def toString: String = contents mkString "\n"
